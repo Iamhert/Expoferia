@@ -8,7 +8,7 @@ pygame.init()
 
 pygame.display.set_caption("Platformer")
 
-WIDTH, HEIGHT = 1000, 800
+WIDTH, HEIGHT = 1540, 830
 FPS = 60
 PLAYER_VEL = 5
 
@@ -49,6 +49,14 @@ def get_block(size):
     image = pygame.image.load(path).convert_alpha()
     surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
     rect = pygame.Rect(96, 0, size, size)
+    surface.blit(image, (0, 0), rect)
+    return pygame.transform.scale2x(surface)
+
+def get_wall(size):
+    path = join("assets", "Terrain", "Terrain.png")
+    image = pygame.image.load(path).convert_alpha()
+    surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
+    rect = pygame.Rect(120, 0, size, size)
     surface.blit(image, (0, 0), rect)
     return pygame.transform.scale2x(surface)
 
@@ -146,7 +154,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
         self.mask = pygame.mask.from_surface(self.sprite)
 
-    def draw(self, win, offset_x):
+    def draw(self, win, offset_x, ):
         win.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
 
 
@@ -159,7 +167,7 @@ class Object(pygame.sprite.Sprite):
         self.height = height
         self.name = name
 
-    def draw(self, win, offset_x):
+    def draw(self, win, offset_x, ):
         win.blit(self.image, (self.rect.x - offset_x, self.rect.y))
 
 
@@ -169,7 +177,6 @@ class Block(Object):
         block = get_block(size)
         self.image.blit(block, (0, 0))
         self.mask = pygame.mask.from_surface(self.image)
-
 
 class Fire(Object):
     ANIMATION_DELAY = 3
@@ -215,14 +222,14 @@ def get_background(name):
     return tiles, image
 
 
-def draw(window, background, bg_image, player, objects, offset_x):
+def draw(window, background, bg_image, player, objects, offset_x, ):
     for tile in background:
         window.blit(bg_image, tile)
 
     for obj in objects:
-        obj.draw(window, offset_x)
+        obj.draw(window, offset_x, )
 
-    player.draw(window, offset_x)
+    player.draw(window, offset_x, )
 
     pygame.display.update()
 
@@ -283,17 +290,43 @@ def main(window):
 
     block_size = 96
 
+
     player = Player(100, 100, 50, 50)
-    fire = Fire(100, HEIGHT - block_size - 64, 16, 32)
+    
+    fire = Fire(block_size * 25, HEIGHT - block_size - 64, 16, 32)
     fire.on()
     floor = [Block(i * block_size, HEIGHT - block_size, block_size)
              for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
     objects = [*floor, Block(0, HEIGHT - block_size * 2, block_size),
-               Block(block_size * 3, HEIGHT - block_size * 4, block_size), fire]
+                Block(0, HEIGHT - block_size * 3, block_size),
+                Block(0, HEIGHT - block_size * 4, block_size),
+                Block(0, HEIGHT - block_size * 5, block_size),
+                Block(0, HEIGHT - block_size * 6, block_size),
+                Block(0, HEIGHT - block_size * 7, block_size),
+                Block(0, HEIGHT - block_size * 8, block_size),
+                Block(0, HEIGHT - block_size * 9, block_size),
+                Block(0, HEIGHT - block_size * 9, block_size),
+                #Esto funciona como pared mientras tanto despues se eliminan
+                Block(block_size * -1, HEIGHT - block_size * 2, block_size),
+                Block(block_size * -1, HEIGHT - block_size * 3, block_size),
+                Block(block_size * -1, HEIGHT - block_size * 4, block_size),
+                Block(block_size * -1, HEIGHT - block_size * 5, block_size),
+                Block(block_size * -1, HEIGHT - block_size * 6, block_size),
+                Block(block_size * -1, HEIGHT - block_size * 7, block_size),
+                Block(block_size * -1, HEIGHT - block_size * 8, block_size),
+                Block(block_size * -1, HEIGHT - block_size * 9, block_size),
+                #Bloques del tutorial
+                Block(block_size * 15, HEIGHT - block_size * 2, block_size),
+                Block(block_size * 22, HEIGHT - block_size * 2, block_size),
+                Block(block_size * 22, HEIGHT - block_size * 3, block_size),
+                Block(block_size * 31, HEIGHT - block_size * 2, block_size),
+                Block(block_size * 31, HEIGHT - block_size * 3, block_size),
+                fire]
 
     offset_x = 0
+    
     scroll_area_width = 200
-
+    
     run = True
     while run:
         clock.tick(FPS)
@@ -310,7 +343,7 @@ def main(window):
         player.loop(FPS)
         fire.loop()
         handle_move(player, objects)
-        draw(window, background, bg_image, player, objects, offset_x)
+        draw(window, background, bg_image, player, objects, offset_x, )
 
         if ((player.rect.right - offset_x >= WIDTH - scroll_area_width) and player.x_vel > 0) or (
                 (player.rect.left - offset_x <= scroll_area_width) and player.x_vel < 0):
