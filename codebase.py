@@ -48,18 +48,9 @@ def get_block(size):
     path = join("assets", "Terrain", "Terrain.png")
     image = pygame.image.load(path).convert_alpha()
     surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
-    rect = pygame.Rect(96, 0, size, size)
+    rect = pygame.Rect(96, 0, size, size) #Aqui es donde salen el terreno quiero las coordenadas de los otros, ve el video para que entiendas mejor
     surface.blit(image, (0, 0), rect)
     return pygame.transform.scale2x(surface)
-
-def get_wall(size):
-    path = join("assets", "Terrain", "Terrain.png")
-    image = pygame.image.load(path).convert_alpha()
-    surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
-    rect = pygame.Rect(120, 0, size, size)
-    surface.blit(image, (0, 0), rect)
-    return pygame.transform.scale2x(surface)
-
 
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
