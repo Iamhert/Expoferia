@@ -11,7 +11,8 @@ pygame.display.set_caption("Platformer")
 WIDTH, HEIGHT = 1540, 830
 FPS = 60
 PLAYER_VEL = 5
-
+vidas = -5
+vivo=True
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
 
@@ -48,7 +49,15 @@ def get_block(size):
     path = join("assets", "Terrain", "Terrain.png")
     image = pygame.image.load(path).convert_alpha()
     surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
-    rect = pygame.Rect(96, 0, size, size) #Aqui es donde salen el terreno quiero las coordenadas de los otros, ve el video para que entiendas mejor
+    rect = pygame.Rect(0, 0, size, size) #Aqui es donde salen el terreno quiero las coordenadas de los otros, ve el video para que entiendas mejor
+    surface.blit(image, (0, 0), rect)
+    return pygame.transform.scale2x(surface)
+
+def get_block2(size):
+    path = join("assets", "Terrain", "Terrain.png")
+    image = pygame.image.load(path).convert_alpha()
+    surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
+    rect = pygame.Rect(0, 0, size, size) #Aqui es donde salen el terreno quiero las coordenadas de los otros, ve el video para que entiendas mejor
     surface.blit(image, (0, 0), rect)
     return pygame.transform.scale2x(surface)
 
@@ -56,7 +65,7 @@ class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
     GRAVITY = 1
     SPRITES = load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
-    ANIMATION_DELAY = 2
+    ANIMATION_DELAY = 4
 
     def __init__(self, x, y, width, height):
         super().__init__()
@@ -169,6 +178,13 @@ class Block(Object):
         self.image.blit(block, (0, 0))
         self.mask = pygame.mask.from_surface(self.image)
 
+class Plataform(Object):
+    def __init__(self, x, y, size):
+        super().__init__(x, y, size, size)
+        block = get_block2(size)
+        self.image.blit(block, (0, 0))
+        self.mask = pygame.mask.from_surface(self.image)
+
 class Fire(Object):
     ANIMATION_DELAY = 3
 
@@ -277,41 +293,93 @@ def handle_move(player, objects):
 
 def main(window):
     clock = pygame.time.Clock()
-    background, bg_image = get_background("Blue.png")
+    background, bg_image = get_background("Background.png")
 
     block_size = 96
-
+    block_size2 = 48
 
     player = Player(100, 100, 50, 50)
     
-    fire = Fire(block_size * 25, HEIGHT - block_size - 64, 16, 32)
-    fire.on()
+    fire = Fire(block_size * 14.7, HEIGHT - block_size - 64, 16, 32)
+    
+    fire.on(),
+    
+
     floor = [Block(i * block_size, HEIGHT - block_size, block_size)
              for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
-    objects = [*floor, Block(0, HEIGHT - block_size * 2, block_size),
-                Block(0, HEIGHT - block_size * 3, block_size),
-                Block(0, HEIGHT - block_size * 4, block_size),
-                Block(0, HEIGHT - block_size * 5, block_size),
-                Block(0, HEIGHT - block_size * 6, block_size),
-                Block(0, HEIGHT - block_size * 7, block_size),
-                Block(0, HEIGHT - block_size * 8, block_size),
-                Block(0, HEIGHT - block_size * 9, block_size),
-                Block(0, HEIGHT - block_size * 9, block_size),
-                #Esto funciona como pared mientras tanto despues se eliminan
-                Block(block_size * -1, HEIGHT - block_size * 2, block_size),
-                Block(block_size * -1, HEIGHT - block_size * 3, block_size),
-                Block(block_size * -1, HEIGHT - block_size * 4, block_size),
-                Block(block_size * -1, HEIGHT - block_size * 5, block_size),
-                Block(block_size * -1, HEIGHT - block_size * 6, block_size),
-                Block(block_size * -1, HEIGHT - block_size * 7, block_size),
-                Block(block_size * -1, HEIGHT - block_size * 8, block_size),
-                Block(block_size * -1, HEIGHT - block_size * 9, block_size),
+    objects = [*floor,
                 #Bloques del tutorial
                 Block(block_size * 15, HEIGHT - block_size * 2, block_size),
                 Block(block_size * 22, HEIGHT - block_size * 2, block_size),
                 Block(block_size * 22, HEIGHT - block_size * 3, block_size),
                 Block(block_size * 31, HEIGHT - block_size * 2, block_size),
                 Block(block_size * 31, HEIGHT - block_size * 3, block_size),
+                Block(block_size * 33, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 34, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 35, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 36, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 37, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 38, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 40, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 42, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 43, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 60, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 61, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 62, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 63, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 64, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 65, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 66, HEIGHT - block_size * 1, block_size),
+                Block(block_size * 67, HEIGHT - block_size * 1, block_size),
+                Plataform(block_size2 * 90, HEIGHT - block_size2 * 5, block_size2),
+                Plataform(block_size2 * 91, HEIGHT - block_size2 * 5, block_size2),
+                Plataform(block_size2 * 93, HEIGHT - block_size2 * 9, block_size2),
+                Plataform(block_size2 * 94, HEIGHT - block_size2 * 9, block_size2),
+                Plataform(block_size2 * 95, HEIGHT - block_size2 * 9, block_size2),
+                Plataform(block_size2 * 98, HEIGHT - block_size2 * 13, block_size2),
+                Plataform(block_size2 * 99, HEIGHT - block_size2 * 13, block_size2),
+                Plataform(block_size2 * 100, HEIGHT - block_size2 * 13, block_size2),
+                Plataform(block_size2 * 108, HEIGHT - block_size2 * 11, block_size2),
+                Plataform(block_size2 * 109, HEIGHT - block_size2 * 11, block_size2),
+                Plataform(block_size2 * 113, HEIGHT - block_size2 * 11, block_size2),
+                Plataform(block_size2 * 114, HEIGHT - block_size2 * 11, block_size2),
+                Plataform(block_size2 * 115, HEIGHT - block_size2 * 10, block_size2),
+                Plataform(block_size2 * 116, HEIGHT - block_size2 * 9, block_size2),
+                Plataform(block_size2 * 121, HEIGHT - block_size2 * 12, block_size2),
+                Plataform(block_size2 * 124, HEIGHT - block_size2 * 12, block_size2),
+                Plataform(block_size2 * 128, HEIGHT - block_size2 * 12, block_size2), Plataform(block_size2 * 130, HEIGHT - block_size2 * 12, block_size2), Plataform(block_size2 * 134, HEIGHT - block_size2 * 12, block_size2),Plataform(block_size2 * 138, HEIGHT - block_size2 * 12, block_size2),
+                Plataform(block_size2 * 147, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 148, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 149, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 150, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 151, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 152, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 153, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 154, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 155, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 156, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 157, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 158, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 159, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 160, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 163, HEIGHT - block_size2 * 8, block_size2),
+                Plataform(block_size2 * 164, HEIGHT - block_size2 * 9, block_size2),
+                Plataform(block_size2 * 165, HEIGHT - block_size2 * 10, block_size2),
+                Plataform(block_size2 * 166, HEIGHT - block_size2 * 11, block_size2),
+                Plataform(block_size2 * 167, HEIGHT - block_size2 * 12, block_size2),
+                Plataform(block_size2 * 168, HEIGHT - block_size2 * 13, block_size2),
+                Plataform(block_size2 * 169, HEIGHT - block_size2 * 14, block_size2),
+                Plataform(block_size2 * 170, HEIGHT - block_size2 * 15, block_size2),
+                Plataform(block_size2 * 171, HEIGHT - block_size2 * 15, block_size2),
+                Plataform(block_size2 * 172, HEIGHT - block_size2 * 15, block_size2),
+                Plataform(block_size2 * 180, HEIGHT - block_size2 * 15, block_size2),
+                Plataform(block_size2 * 181, HEIGHT - block_size2 * 15, block_size2),
+                Plataform(block_size2 * 189, HEIGHT - block_size2 * 15, block_size2),
+                Plataform(block_size2 * 190, HEIGHT - block_size2 * 15, block_size2),
+                Plataform(block_size2 * 198, HEIGHT - block_size2 * 15, block_size2),
+                Plataform(block_size2 * 199, HEIGHT - block_size2 * 15, block_size2),
+                Plataform(block_size2 * 209, HEIGHT - block_size2 * 7, block_size2),
+               
                 fire]
 
     offset_x = 0
@@ -339,10 +407,13 @@ def main(window):
         if ((player.rect.right - offset_x >= WIDTH - scroll_area_width) and player.x_vel > 0) or (
                 (player.rect.left - offset_x <= scroll_area_width) and player.x_vel < 0):
             offset_x += player.x_vel
-
+            #lo de la camara debe ser aca (para subirla)
+        
     pygame.quit()
     quit()
 
 
 if __name__ == "__main__":
-    main(window)
+    for i in range (vidas,1):
+        while vivo==True:
+            main(window)
