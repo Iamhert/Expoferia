@@ -2,18 +2,21 @@ import os
 import random
 import math
 import pygame
+import time
 import Funciones
 from os import listdir
 from os.path import isfile, join
 
-
-
+WIDTH, HEIGHT = 1540, 830
+window = pygame.display.set_mode((WIDTH, HEIGHT))
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
     GRAVITY = 1
     SPRITES = Funciones.load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
     ANIMATION_DELAY = 4
-
+    run = True
+    backgroundd, bg_imaged = Funciones.get_background("Backgroundd.png")
+    
     def __init__(self, x, y, width, height):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
@@ -79,6 +82,11 @@ class Player(pygame.sprite.Sprite):
         sprite_sheet = "idle"
         if self.hit:
             sprite_sheet = "hit"
+            Funciones.PLAYER_VEL=0
+            Player.GRAVITY=0
+            Funciones.dead(window, Player.backgroundd, Player.bg_imaged, )
+            time.sleep(2)
+            Player.run=False
         elif self.y_vel < 0:
             if self.jump_count == 1:
                 sprite_sheet = "jump"
@@ -147,6 +155,65 @@ class Fire(Object):
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height, "fire")
         self.fire = Funciones.load_sprite_sheets("Traps", "Fire", width, height)
+        self.image = self.fire["off"][0]
+        self.mask = pygame.mask.from_surface(self.image)
+        self.animation_count = 0
+        self.animation_name = "off"
+
+    def on(self):
+        self.animation_name = "on"
+
+    def off(self):
+        self.animation_name = "off"
+
+    def loop(self):
+        sprites = self.fire[self.animation_name]
+        sprite_index = (self.animation_count //
+                        self.ANIMATION_DELAY) % len(sprites)
+        self.image = sprites[sprite_index]
+        self.animation_count += 1
+
+        self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
+        self.mask = pygame.mask.from_surface(self.image)
+
+        if self.animation_count // self.ANIMATION_DELAY > len(sprites):
+            self.animation_count = 0
+
+class Trap(Object):
+    ANIMATION_DELAY = 3
+
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height, "fire")
+        self.fire = Funciones.load_sprite_sheets("Traps", "Fan", width, height)
+        self.image = self.fire["off"][0]
+        self.mask = pygame.mask.from_surface(self.image)
+        self.animation_count = 0
+        self.animation_name = "off"
+
+    def on(self):
+        self.animation_name = "on"
+
+    def off(self):
+        self.animation_name = "off"
+
+    def loop(self):
+        sprites = self.fire[self.animation_name]
+        sprite_index = (self.animation_count //
+                        self.ANIMATION_DELAY) % len(sprites)
+        self.image = sprites[sprite_index]
+        self.animation_count += 1
+
+        self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
+        self.mask = pygame.mask.from_surface(self.image)
+
+        if self.animation_count // self.ANIMATION_DELAY > len(sprites):
+            self.animation_count = 0
+class Monster(Object):
+    ANIMATION_DELAY = 3
+
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height, "fire")
+        self.fire = Funciones.load_sprite_sheets("Enemies", "Monster", width, height)
         self.image = self.fire["off"][0]
         self.mask = pygame.mask.from_surface(self.image)
         self.animation_count = 0

@@ -96,6 +96,7 @@ def draw(window, backgroundd, bg_image, player, objects, offset_x,):
 
     player.draw(window, offset_x, )
 
+
     pygame.display.update()
 
 def handle_vertical_collision(player, objects, dy):
