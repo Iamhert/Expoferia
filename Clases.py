@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.x_vel = 0
         self.y_vel = 0
         self.mask = None
-        self.direction = "left"
+        self.direction = "right"
         self.animation_count = 0
         self.fall_count = 0
         self.jump_count = 0
@@ -124,6 +124,15 @@ class Block(Object):
         self.image.blit(block, (0, 0))
         self.mask = pygame.mask.from_surface(self.image)
 
+class BlockD(Object):
+    
+    def __init__(self, x, y, size):
+        
+        super().__init__(x, y, size, size)
+        blockd = Funciones.get_block2(size)
+        self.image.blit(blockd, (0, 0))
+        self.mask = pygame.mask.from_surface(self.image)
+
 class Plataform(Object):
     def __init__(self, x, y, size):
         super().__init__(x, y, size, size)
@@ -131,7 +140,7 @@ class Plataform(Object):
         self.image.blit(block, (0, 0))
         self.mask = pygame.mask.from_surface(self.image)
 
-        
+
 class Fire(Object):
     ANIMATION_DELAY = 3
 

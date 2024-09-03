@@ -1,9 +1,11 @@
 import os
 import random
 import math
+import time
 import pygame
 import Clases
 import Funciones
+import enemigos, fires
 from os import listdir
 from os.path import isfile, join
 pygame.init()
@@ -11,32 +13,35 @@ pygame.init()
 
 pygame.display.set_caption("Platformer")
 
+clock = pygame.time.Clock()
 WIDTH, HEIGHT = 1540, 830
 FPS = 60
-PLAYER_VEL = 7
 vidas = -5
-vivo=True
 window = pygame.display.set_mode((WIDTH, HEIGHT))
+
+#enemy = enemigos.Enemy(100,100,32,32)
 
 
 def main(window):
     clock = pygame.time.Clock()
     background, bg_image = Funciones.get_background("Background.png")
-
+    backgroundd, bg_imaged = Funciones.get_background("Backgroundd.png")
     block_size = 96
     block_size2 = 48
 
     player = Clases.Player(100, 100, 50, 50)
+   
+    #enemies = pygame.sprite.Group()
+    #enemies.add(enemy)
     
-    fire = Clases.Fire(block_size * 14.7, HEIGHT - block_size - 64, 16, 32)
-    fire2 = Clases.Fire(block_size * 16, HEIGHT - block_size - 64, 16, 32)
-    fire.on(),
-    fire2.on(),
+    fires.fire.on(),fires.fire2.on(),fires.fire3.on(),fires.fire4.on(),fires.fire5.on(),fires.fire6.on(),fires.fire7.on(),fires.fire8.on(),fires.fire9.on(),
 
     floor = [Clases.Block(i * block_size, HEIGHT - block_size, block_size)
              for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
-    objects = [*floor,
-                #Bloques del tutorial
+    floor2 = [Clases.BlockD(i * block_size, 1000 - block_size, block_size)
+             for i in range(-5000 // block_size, (7000 * 2) // block_size)]
+    objects = [*floor,*floor2,
+                
                 Clases.Block(block_size * 15, HEIGHT - block_size * 2, block_size),
                 Clases.Block(block_size * 22, HEIGHT - block_size * 2, block_size),
                 Clases.Block(block_size * 22, HEIGHT - block_size * 3, block_size),
@@ -51,14 +56,6 @@ def main(window):
                 Clases.Block(block_size * 40, HEIGHT - block_size * 1, block_size),
                 Clases.Block(block_size * 42, HEIGHT - block_size * 1, block_size),
                 Clases.Block(block_size * 43, HEIGHT - block_size * 1, block_size),
-                Clases.Block(block_size * 60, HEIGHT - block_size * 1, block_size),
-                Clases.Block(block_size * 61, HEIGHT - block_size * 1, block_size),
-                Clases.Block(block_size * 62, HEIGHT - block_size * 1, block_size),
-                Clases.Block(block_size * 63, HEIGHT - block_size * 1, block_size),
-                Clases.Block(block_size * 64, HEIGHT - block_size * 1, block_size),
-                Clases.Block(block_size * 65, HEIGHT - block_size * 1, block_size),
-                Clases.Block(block_size * 66, HEIGHT - block_size * 1, block_size),
-                Clases.Block(block_size * 67, HEIGHT - block_size * 1, block_size),
                 Clases.Plataform(block_size2 * 90, HEIGHT - block_size2 * 5, block_size2),
                 Clases.Plataform(block_size2 * 91, HEIGHT - block_size2 * 5, block_size2),
                 Clases.Plataform(block_size2 * 93, HEIGHT - block_size2 * 9, block_size2),
@@ -107,8 +104,51 @@ def main(window):
                 Clases.Plataform(block_size2 * 198, HEIGHT - block_size2 * 15, block_size2),
                 Clases.Plataform(block_size2 * 199, HEIGHT - block_size2 * 15, block_size2),
                 Clases.Plataform(block_size2 * 209, HEIGHT - block_size2 * 7, block_size2),
-                fire2,
-                fire]
+                Clases.Plataform(block_size2 * 215, HEIGHT - block_size2 * 7, block_size2),
+                Clases.Plataform(block_size2 * 216, HEIGHT - block_size2 * 7, block_size2),
+                Clases.Plataform(block_size2 * 224, HEIGHT - block_size2 * 11, block_size2),
+                Clases.Plataform(block_size2 * 225, HEIGHT - block_size2 * 11, block_size2),
+                Clases.Plataform(block_size2 * 234, HEIGHT - block_size2 * 15, block_size2),
+                Clases.Plataform(block_size2 * 235, HEIGHT - block_size2 * 15, block_size2),
+                Clases.Block(block_size * 127, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 128, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 129, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 130, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 133, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 134, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 135, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 136, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 137, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 138, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 139, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 143, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 144, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 145, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 146, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 146, HEIGHT - block_size * 2, block_size),
+                Clases.Block(block_size * 146, HEIGHT - block_size * 3, block_size),
+                Clases.Block(block_size * 147, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 148, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 149, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 150, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 151, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 152, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 153, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 154, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 155, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 156, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 157, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 158, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 159, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 160, HEIGHT - block_size * 1, block_size),
+                Clases.Block(block_size * 160, HEIGHT - block_size * 2, block_size),
+                Clases.Block(block_size * 160, HEIGHT - block_size * 3, block_size),
+                Clases.Plataform(block_size2 * 300, HEIGHT - block_size2 * 10, block_size2),
+                Clases.Plataform(block_size2 * 301, HEIGHT - block_size2 * 10, block_size2),
+                 Clases.Plataform(block_size2 * 311, HEIGHT - block_size2 * 10, block_size2),
+                Clases.Plataform(block_size2 * 312, HEIGHT - block_size2 * 10, block_size2),
+                fires.fire,fires.fire2, fires.fire3, fires.fire4, fires.fire5,fires.fire7,fires.fire8,fires.fire9
+                ]
 
     offset_x = 0
     
@@ -122,27 +162,47 @@ def main(window):
             if event.type == pygame.QUIT:
                 run = False
                 break
-
+            
+            if player.hit==True :
+                Funciones.daño-=1
+                if Funciones.daño ==0:
+                    Funciones.PLAYER_VEL=0
+                    Clases.Player.GRAVITY=0
+                    Funciones.dead(window, backgroundd, bg_imaged, )
+                    time.sleep(2)
+                    run=False
+                        
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and player.jump_count < 2:
                     player.jump()
-
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    quit()
+        pygame.display.update()
         player.loop(FPS)
-        fire.loop()
-        fire2.loop()
-        Funciones.handle_move(player, objects)
-        Funciones.draw(window, background, bg_image, player, objects, offset_x, )
+        fires.fire.loop(),fires.fire2.loop(),fires.fire3.loop(),fires.fire4.loop(),fires.fire8.loop(),fires.fire5.loop(),fires.fire6.loop(),fires.fire7.loop(),fires.fire9.loop()
+        Funciones.handle_move(player, objects, )
+        Funciones.draw(window, background, bg_image, player, objects, offset_x,  )
 
         if ((player.rect.right - offset_x >= WIDTH - scroll_area_width) and player.x_vel > 0) or (
                 (player.rect.left - offset_x <= scroll_area_width) and player.x_vel < 0):
             offset_x += player.x_vel
-            #lo de la camara debe ser aca (para subirla)
-        
-    pygame.quit()
-    quit()
-
+            #camara
+    
+    
+vivo=True
 
 if __name__ == "__main__":
-    for i in range (vidas,1):
-        while vivo==True:
+    for i in range (vidas,0):
+        while vivo:
+            fps = clock.get_fps()
+            run=True
             main(window)
+            vidas+=1
+            Funciones.daño=3
+            Funciones.PLAYER_VEL=10
+            Clases.Player.GRAVITY=1
+            pygame.quit()
+
+            

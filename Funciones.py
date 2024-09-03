@@ -8,8 +8,8 @@ from os.path import isfile, join
 
 WIDTH, HEIGHT = 1540, 830
 FPS = 60
-PLAYER_VEL = 7
-vidas = -5
+PLAYER_VEL = 10
+daño=3
 vivo=True
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -50,6 +50,7 @@ def get_block(size):
     surface.blit(image, (0, 0), rect)
     return pygame.transform.scale2x(surface)
 
+
 def get_block2(size):
     path = join("assets", "Terrain", "Terrain.png")
     image = pygame.image.load(path).convert_alpha()
@@ -64,14 +65,30 @@ def get_background(name):
     tiles = []
 
     for i in range(WIDTH // width + 1):
-        for j in range(HEIGHT // height + 1):
+        for j in range(900 // height + 1):
             pos = (i * width, j * height)
             tiles.append(pos)
 
     return tiles, image
+def game_over(name):
+    image = pygame.image.load(join("assets", "Background", name))
+    _, _, width, height = image.get_rect()
+    muerte = []
 
-def draw(window, background, bg_image, player, objects, offset_x, ):
-    for tile in background:
+    for i in range(WIDTH // width + 1):
+        for j in range(900 // height + 1):
+            pos = (i * width, j * height)
+            muerte.append(pos)
+
+    return muerte, image
+def dead(window, backgroundd, bg_imaged, ):
+    for tile in backgroundd:
+        window.blit(bg_imaged, tile)
+
+    
+    pygame.display.update()
+def draw(window, backgroundd, bg_image, player, objects, offset_x,):
+    for tile in backgroundd:
         window.blit(bg_image, tile)
 
     for obj in objects:
@@ -86,6 +103,7 @@ def handle_vertical_collision(player, objects, dy):
     for obj in objects:
         if pygame.sprite.collide_mask(player, obj):
             if dy > 0:
+                
                 player.rect.bottom = obj.rect.top
                 player.landed()
             elif dy < 0:
@@ -123,7 +141,9 @@ def handle_move(player, objects):
 
     vertical_collide = handle_vertical_collision(player, objects, player.y_vel)
     to_check = [collide_left, collide_right, *vertical_collide]
-
+    for obj in to_check:
+        if obj and obj.name == "floor2":
+            player.make_hit()
     for obj in to_check:
         if obj and obj.name == "fire":
             player.make_hit()
